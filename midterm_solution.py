@@ -1,13 +1,12 @@
-# Ask for student name (must not be blank)
 student_name = ""
 while student_name == "":
     student_name = input("Enter your name: ")
-    if student_name == "":
+    if student_name.replace(" ", "") == "":
         print("Name cannot be blank. Please enter again.")
 
-# Ask for weekly budget (must be a number)
+
 weekly_budget = -1
-while weekly_budget < 0:
+while weekly_budget <= 0:
     budget_input = input("Enter your weekly budget: ")
     if budget_input == "":
         print("Invalid input. Enter a number.")
@@ -21,10 +20,12 @@ while weekly_budget < 0:
 
         if is_valid_number == True:
             weekly_budget = int(budget_input)
+            if weekly_budget <= 0:
+                print("Budget must be greater than zero.")
         else:
             print("Invalid input. Enter a valid number.")
 
-# Display categories using loop
+
 print("\n==========================================")
 print("   WEEKLY EXPENSE -- CATEGORIES")
 print("==========================================")
@@ -52,14 +53,14 @@ while index_counter < 5:
 
 print("==========================================")
 
-# Prepare storage
+
 expense_count = 0
 expense_category_list = []
 expense_description_list = []
 expense_amount_list = []
 expense_alert_list = []
 
-# Loop for 4 expenses
+
 entry_number = 1
 while entry_number <= 4:
     print("\n--- EXPENSE " + str(entry_number) + " ---")
@@ -89,7 +90,7 @@ while entry_number <= 4:
         description_text = ""
         while description_text == "":
             description_text = input("Description: ")
-            if description_text == "":
+            if description_text.replace(" ", "") == "":
                 print("Description cannot be blank.")
 
         amount_value = -1
@@ -110,13 +111,13 @@ while entry_number <= 4:
                 else:
                     print("Invalid input.")
 
-        # Check high expense
+       
         high_limit = weekly_budget * 0.25
         alert_text = ""
         if amount_value > high_limit:
             alert_text = "! High Expense Alert!"
 
-        # Store values
+        
         expense_category_list.append(category_names[category_number - 1])
         expense_description_list.append(description_text)
         expense_amount_list.append(amount_value)
@@ -125,7 +126,7 @@ while entry_number <= 4:
         expense_count = expense_count + 1
         entry_number = entry_number + 1
 
-# Compute totals
+
 total_spent = 0
 index_counter = 0
 while index_counter < expense_count:
@@ -140,7 +141,7 @@ if remaining_balance >= 0:
 else:
     status_text = "Overspent! Reduce spending."
 
-# Print report
+
 print("\n======================================================")
 print("     " + student_name.upper() + " -- WEEKLY EXPENSE LOG")
 print("======================================================")
