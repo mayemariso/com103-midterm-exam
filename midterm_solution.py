@@ -1,24 +1,31 @@
+# Ask for student name
 student_name = input("Student name: ")
 
+# Validate weekly budget input
 weekly_budget = 0
-valid_budget = False
-while not valid_budget:
-    budget_input = input("Weekly budget: ")
-    valid_budget = True
-    for character in budget_input:
-        if character != '.' and not ('0' <= character <= '9'):
-            valid_budget = False
-    if valid_budget and budget_input != '':
-        weekly_budget = float(budget_input)
+budget_is_valid = False
+
+while budget_is_valid == False:
+    weekly_budget_input = input("Weekly budget: ")
+
+    if weekly_budget_input == "":
+        print("Invalid input. Enter a number.")
     else:
-        valid_budget = False
-        print("Invalid input. Please enter a valid number.")
+        is_number = True
+        index_counter = 0
 
-print()
-print("==========================================")
-print("   WEEKLY EXPENSE -- CATEGORIES")
-print("==========================================")
+        while index_counter < len(weekly_budget_input):
+            if weekly_budget_input[index_counter] < '0' or weekly_budget_input[index_counter] > '9':
+                is_number = False
+            index_counter = index_counter + 1
 
+        if is_number == True:
+            weekly_budget = int(weekly_budget_input)
+            budget_is_valid = True
+        else:
+            print("Invalid input. Enter numbers only.")
+
+# Categories (hardcoded)
 category_names = [
     "Food & Drinks",
     "Transportation",
@@ -35,152 +42,137 @@ category_examples = [
     "Games, movies, hangout"
 ]
 
-category_index = 0
-while category_index < 5:
-    category_number = category_index + 1
-    category_label = category_names[category_index]
-    category_example = category_examples[category_index]
-    print(f" {category_number}. {category_label:<22} [e.g. {category_example}]")
-    category_index = category_index + 1
+print("")
+print("==========================================")
+print("   WEEKLY EXPENSE -- CATEGORIES")
+print("==========================================")
+
+index_counter = 0
+while index_counter < 5:
+    print(" " + str(index_counter + 1) + ". " + category_names[index_counter] + "       [e.g. " + category_examples[index_counter] + "]")
+    index_counter = index_counter + 1
 
 print("==========================================")
-print()
 
-logged_expense_categories = []
-logged_expense_descriptions = []
-logged_expense_amounts = []
+# Storage
+expense_category_list = []
+expense_description_list = []
+expense_amount_list = []
+expense_alert_list = []
 
-total_number_of_expenses = 4
-high_expense_threshold = weekly_budget * 0.25
+entry_counter = 1
 
-expense_slot = 1
-while expense_slot <= total_number_of_expenses:
-    print(f"--- EXPENSE {expense_slot} ---")
+while entry_counter <= 4:
+    print("")
+    print("--- EXPENSE " + str(entry_counter) + " ---")
 
     valid_category = False
-    chosen_category_number = 0
-    while not valid_category:
+    category_number = 0
+
+    # Category validation
+    while valid_category == False:
         category_input = input("Category (0 to skip): ")
-        is_digit = True
-        for character in category_input:
-            if not ('0' <= character <= '9'):
-                is_digit = False
-        if is_digit and category_input != '':
-            chosen_category_number = int(category_input)
-            if chosen_category_number == 0 or (1 <= chosen_category_number <= 5):
-                valid_category = True
+
+        if category_input == "":
+            print("Invalid input.")
+        else:
+            is_number = True
+            index_counter = 0
+
+            while index_counter < len(category_input):
+                if category_input[index_counter] < '0' or category_input[index_counter] > '9':
+                    is_number = False
+                index_counter = index_counter + 1
+
+            if is_number == True:
+                category_number = int(category_input)
+
+                if category_number >= 0 and category_number <= 5:
+                    valid_category = True
+                else:
+                    print("Enter number from 0 to 5.")
             else:
-                print("Invalid category. Please enter a number from 0 to 5.")
-        else:
-            print("Invalid input. Please enter a number from 0 to 5.")
+                print("Numbers only.")
 
-    if chosen_category_number == 0:
-        print()
-        expense_slot = expense_slot + 1
-        continue
+    if category_number == 0:
+        entry_counter = entry_counter + 1
+    else:
+        description_text = input("Description: ")
 
-    expense_description = input("Description: ")
+        valid_amount = False
+        amount_value = 0
 
-    valid_amount = False
-    expense_amount = 0
-    while not valid_amount:
-        amount_input = input("Amount: ")
-        valid_amount = True
-        for character in amount_input:
-            if character != '.' and not ('0' <= character <= '9'):
-                valid_amount = False
-        if valid_amount and amount_input != '':
-            expense_amount = float(amount_input)
-        else:
-            valid_amount = False
-            print("Invalid input. Please enter a valid amount.")
+        # Amount validation
+        while valid_amount == False:
+            amount_input = input("Amount: ")
 
-    logged_expense_categories.append(category_names[chosen_category_number - 1])
-    logged_expense_descriptions.append(expense_description)
-    logged_expense_amounts.append(expense_amount)
+            if amount_input == "":
+                print("Invalid input.")
+            else:
+                is_number = True
+                index_counter = 0
 
-    print()
-    expense_slot = expense_slot + 1
+                while index_counter < len(amount_input):
+                    if amount_input[index_counter] < '0' or amount_input[index_counter] > '9':
+                        is_number = False
+                    index_counter = index_counter + 1
 
-total_amount_spent = 0
-amount_index = 0
-while amount_index < len(logged_expense_amounts):
-    total_amount_spent = total_amount_spent + logged_expense_amounts[amount_index]
-    amount_index = amount_index + 1
+                if is_number == True:
+                    amount_value = int(amount_input)
+                    valid_amount = True
+                else:
+                    print("Numbers only.")
 
-remaining_balance = weekly_budget - total_amount_spent
+        # Check 25% rule
+        high_expense_limit = weekly_budget * 0.25
+        alert_message = ""
+
+        if amount_value > high_expense_limit:
+            alert_message = "! High Expense Alert!"
+
+        # Store data
+        expense_category_list.append(category_number)
+        expense_description_list.append(description_text)
+        expense_amount_list.append(amount_value)
+        expense_alert_list.append(alert_message)
+
+        entry_counter = entry_counter + 1
+
+# Compute totals
+total_spent = 0
+index_counter = 0
+
+while index_counter < len(expense_amount_list):
+    total_spent = total_spent + expense_amount_list[index_counter]
+    index_counter = index_counter + 1
+
+remaining_balance = weekly_budget - total_spent
 
 if remaining_balance >= 0:
     budget_status = "Budget OK! Keep it up."
 else:
     budget_status = "Overspent! Reduce spending."
 
-student_name_upper = student_name.upper()
-
+# Output report
+print("")
 print("======================================================")
-print(f"     {student_name_upper} -- WEEKLY EXPENSE LOG")
+print("     " + student_name.upper() + " -- WEEKLY EXPENSE LOG")
 print("======================================================")
 
-weekly_budget_whole = int(weekly_budget)
-weekly_budget_cents = int(round((weekly_budget - weekly_budget_whole) * 100))
-if weekly_budget_cents < 10:
-    weekly_budget_formatted = f"P{weekly_budget_whole}.0{weekly_budget_cents}"
-else:
-    weekly_budget_formatted = f"P{weekly_budget_whole}.{weekly_budget_cents}"
+print("  Weekly Budget  : P" + str(weekly_budget))
 
-print(f"  Weekly Budget  : {weekly_budget_formatted}")
+index_counter = 0
 
-log_index = 0
-while log_index < len(logged_expense_categories):
-    entry_number = log_index + 1
-    entry_category = logged_expense_categories[log_index]
-    entry_description = logged_expense_descriptions[log_index]
-    entry_amount = logged_expense_amounts[log_index]
+while index_counter < len(expense_category_list):
+    category_index = expense_category_list[index_counter] - 1
 
-    entry_amount_whole = int(entry_amount)
-    entry_amount_cents = int(round((entry_amount - entry_amount_whole) * 100))
-    if entry_amount_cents < 10:
-        entry_amount_formatted = f"P{entry_amount_whole}.0{entry_amount_cents}"
-    else:
-        entry_amount_formatted = f"P{entry_amount_whole}.{entry_amount_cents}"
+    print("  [" + str(index_counter + 1) + "] " + category_names[category_index])
+    print("      " + expense_description_list[index_counter] + "    P" + str(expense_amount_list[index_counter]) + " " + expense_alert_list[index_counter])
 
-    if entry_amount > high_expense_threshold:
-        high_expense_tag = "  ! High Expense Alert!"
-    else:
-        high_expense_tag = ""
-
-    print(f"  [{entry_number}] {entry_category}")
-    print(f"      {entry_description:<36}{entry_amount_formatted}{high_expense_tag}")
-
-    log_index = log_index + 1
+    index_counter = index_counter + 1
 
 print("------------------------------------------------------")
-
-total_whole = int(total_amount_spent)
-total_cents = int(round((total_amount_spent - total_whole) * 100))
-if total_cents < 10:
-    total_formatted = f"P{total_whole}.0{total_cents}"
-else:
-    total_formatted = f"P{total_whole}.{total_cents}"
-
-remaining_absolute = remaining_balance
-if remaining_balance < 0:
-    remaining_absolute = -remaining_balance
-
-remaining_whole = int(remaining_absolute)
-remaining_cents = int(round((remaining_absolute - remaining_whole) * 100))
-if remaining_cents < 10:
-    if remaining_balance < 0:
-        remaining_formatted = f"-P{remaining_whole}.0{remaining_cents}"
-    else:
-        remaining_formatted = f"P{remaining_whole}.0{remaining_cents}"
-else:
-    if remaining_balance < 0:
-        remaining_formatted = f"-P{remaining_whole}.{remaining_cents}"
-    else:
-        remaining_formatted = f"P{remaining_whole}.{remaining_cents}"
-
-print(f"  Total Spent    : {total_formatted}")
-print(f"  Remaining      : {remaining_formatted}")
-print(f"  Status         : {budget_status}")
+print("  Total Spent    : P" + str(total_spent))
+print("  Remaining      : P" + str(remaining_balance))
+print("  Status         : " + budget_status)
 print("======================================================")
