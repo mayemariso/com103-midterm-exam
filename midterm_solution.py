@@ -48,7 +48,7 @@ category_examples = [
 
 index_counter = 0
 while index_counter < 5:
-    print(" " + str(index_counter + 1) + ". " + category_names[index_counter] + "       [e.g. " + category_examples[index_counter] + "]")
+    print(f" {index_counter + 1}. {category_names[index_counter]}       [e.g. {category_examples[index_counter]}]")
     index_counter = index_counter + 1
 
 print("==========================================")
@@ -63,7 +63,7 @@ expense_alert_list = []
 
 entry_number = 1
 while entry_number <= 4:
-    print("\n--- EXPENSE " + str(entry_number) + " ---")
+    print(f"\n--- EXPENSE {entry_number} ---")
 
     category_number = -1
     while category_number < 0 or category_number > 5:
@@ -93,23 +93,17 @@ while entry_number <= 4:
             if description_text.replace(" ", "") == "":
                 print("Description cannot be blank.")
 
-        amount_value = -1
-        while amount_value < 0:
+        amount_value = 0
+        while amount_value <= 0:
             amount_input = input("Amount: ")
             if amount_input == "":
                 print("Invalid input.")
+            elif amount_input.isdigit():
+                amount_value = int(amount_input)
+                if amount_value <= 0:
+                    print("Amount must be greater than zero.")
             else:
-                is_valid_number = True
-                index_counter = 0
-                while index_counter < len(amount_input):
-                    if amount_input[index_counter] < '0' or amount_input[index_counter] > '9':
-                        is_valid_number = False
-                    index_counter = index_counter + 1
-
-                if is_valid_number == True:
-                    amount_value = int(amount_input)
-                else:
-                    print("Invalid input.")
+                print("Invalid input.")
 
        
         high_limit = weekly_budget * 0.25
@@ -143,18 +137,18 @@ else:
 
 
 print("\n======================================================")
-print("     " + student_name.upper() + " -- WEEKLY EXPENSE LOG")
+print(f"     {student_name.upper()} -- WEEKLY EXPENSE LOG")
 print("======================================================")
-print("  Weekly Budget  : P" + str(weekly_budget))
+print(f"  Weekly Budget  : P{weekly_budget:.2f}")
 
 index_counter = 0
 while index_counter < expense_count:
-    print("  [" + str(index_counter + 1) + "] " + expense_category_list[index_counter])
-    print("      " + expense_description_list[index_counter] + "    P" + str(expense_amount_list[index_counter]) + "  " + expense_alert_list[index_counter])
+    print(f"  [{index_counter + 1}] {expense_category_list[index_counter]}")
+    print(f"      {expense_description_list[index_counter]}    P{expense_amount_list[index_counter]:.2f}  {expense_alert_list[index_counter]}")
     index_counter = index_counter + 1
 
 print("------------------------------------------------------")
-print("  Total Spent    : P" + str(total_spent))
-print("  Remaining      : P" + str(remaining_balance))
-print("  Status         : " + status_text)
+print(f"  Total Spent    : P{total_spent:.2f}")
+print(f"  Remaining      : P{remaining_balance:.2f}")
+print(f"  Status         : {status_text}")
 print("======================================================")
